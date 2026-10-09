@@ -5,6 +5,7 @@
     "main": "dist/main.js",
     "scripts": {
         "build": "tsc",
+        "postinstall": "prisma generate",
         "start": "node dist/main.js",
         "dev": "nest start --watch",
         "db:migrate": "prisma migrate dev",
