@@ -1,0 +1,49 @@
+<h2>Neue Terminumfrage</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="mb-3">
+        <label class="form-label">Titel</label>
+        <input class="form-control" formControlName="title" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Beschreibung (optional)</label>
+        <textarea class="form-control" rows="2" formControlName="description"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Zeitzone der Termine</label>
+        <select class="form-select" formControlName="timezone">
+            @for (tz of timezones; track tz) {
+                <option [value]="tz">{{ tz }}</option>
+            }
+        </select>
+        <div class="form-text">Die Termine unten werden in dieser Zeitzone eingegeben.</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Terminvorschläge</label>
+        @for (ctrl of slots.controls; track $index; let i = $index) {
+            <div class="input-group mb-2">
+                <input type="datetime-local" class="form-control" [formControl]="ctrl" />
+                <button
+                    type="button"
+                    class="btn btn-outline-danger"
+                    (click)="removeSlot(i)"
+                    [disabled]="slots.length === 1"
+                >
+                    ✕
+                </button>
+            </div>
+        }
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="addSlot()">
+            + Termin hinzufügen
+        </button>
+    </div>
+
+    @if (error()) {
+        <div class="alert alert-danger">{{ error() }}</div>
+    }
+
+    <button class="btn btn-primary" type="submit" [disabled]="saving()">Umfrage erstellen</button>
+</form>

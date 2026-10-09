@@ -1,0 +1,76 @@
+@if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+}
+
+@if (poll(); as p) {
+    <h2>{{ p.title }}</h2>
+    @if (p.description) {
+        <p class="text-muted">{{ p.description }}</p>
+    }
+    <p class="small text-muted">Anzeige in deiner Zeitzone: {{ myTimezone }}</p>
+
+    <div class="d-flex gap-2 mb-3">
+        <button class="btn btn-sm btn-outline-secondary" (click)="copyLink()">Link kopieren</button>
+        <a class="btn btn-sm btn-outline-secondary" [href]="pdfUrl" target="_blank">PDF</a>
+    </div>
+
+    @if (participant(); as me) {
+        <p>
+            Abstimmen als <strong>{{ me.name }}</strong>
+        </p>
+    } @else {
+        <div class="card card-body mb-3">
+            <label class="form-label">Dein Name, um abzustimmen</label>
+            <div class="input-group">
+                <input class="form-control" [(ngModel)]="name" (keyup.enter)="join()" />
+                <button class="btn btn-primary" (click)="join()" [disabled]="!name.trim()">
+                    Teilnehmen
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Termin</th>
+                    <th>Deine Wahl</th>
+                    <th class="text-center">Ja</th>
+                    <th class="text-center">Vielleicht</th>
+                    <th class="text-center">Nein</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (slot of sortedSlots(); track slot.id) {
+                    <tr [class.table-success]="slot.id === bestSlotId()">
+                        <td>{{ formatSlot(slot.startsAt) }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                @for (opt of options; track opt.value) {
+                                    <button
+                                        type="button"
+                                        class="btn"
+                                        [class.btn-primary]="userVotes()[slot.id] === opt.value"
+                                        [class.btn-outline-primary]="
+                                            userVotes()[slot.id] !== opt.value
+                                        "
+                                        [disabled]="!participant()"
+                                        (click)="vote(slot.id, opt.value)"
+                                    >
+                                        {{ opt.label }}
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                        <td class="text-center">{{ slot.yesCount }}</td>
+                        <td class="text-center">{{ slot.maybeCount }}</td>
+                        <td class="text-center">{{ slot.noCount }}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+} @else {
+    <p>Lade Umfrage …</p>
+}
