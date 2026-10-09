@@ -1,0 +1,19 @@
+{
+    "name": "doodle-tool",
+    "version": "0.0.1",
+    "description": "Simple scheduling poll tool - find the best meeting time",
+    "private": true,
+    "workspaces": [
+        "backend",
+        "frontend"
+    ],
+    "scripts": {
+        "start": "npm run start --workspace=backend",
+        "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run start --workspace=frontend\"",
+        "build": "npm run build --workspaces",
+        "test": "npm run test --workspaces"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}

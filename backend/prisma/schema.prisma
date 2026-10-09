@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Poll {
+  id               String   @id @default(cuid())
+  title            String
+  description      String?
+  moderatorToken   String   @unique @default(cuid())
+  timezone         String   @default("UTC")
+  
+  slots            PollSlot[]
+  userSessions     UserSession[]
+  votes            Vote[]
+  
+  createdAt        DateTime @default(now())
+  expiresAt        DateTime?
+  
+  @@index([moderatorToken])
+  @@index([createdAt])
+}
+
+model PollSlot {
+  id               String   @id @default(cuid())
+  pollId           String
+  poll             Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  
+  startsAt         DateTime
+  endsAt           DateTime?
+  
+  votes            Vote[]
+  
+  createdAt        DateTime @default(now())
+  
+  @@unique([pollId, startsAt])
+  @@index([pollId])
+}
+
+model UserSession {
+  id               String   @id @default(cuid())
+  pollId           String
+  poll             Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  
+  name             String?
+  timezone         String?
+  
+  votes            Vote[]
+  
+  createdAt        DateTime @default(now())
+  
+  @@unique([pollId, id])
+  @@index([pollId])
+}
+
+model Vote {
+  id               String   @id @default(cuid())
+  pollId           String
+  poll             Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  
+  slotId           String
+  slot             PollSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  
+  userSessionId    String
+  userSession      UserSession @relation(fields: [userSessionId], references: [id], onDelete: Cascade)
+  
+  status           String   @default("no") // "yes" | "maybe" | "no"
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@unique([slotId, userSessionId])
+  @@index([pollId])
+  @@index([slotId])
+  @@index([userSessionId])
+}
