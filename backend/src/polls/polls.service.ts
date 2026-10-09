@@ -68,36 +68,39 @@ export class PollsService {
     async getPollWithVotes(id: string) {
         const poll = await this.getPoll(id)
 
-        // Aggregate vote counts per slot
+        // Stimmen pro Termin mit Namen laden und daraus Zählungen ableiten
         const slotsWithVotes = await Promise.all(
             poll.slots.map(async slot => {
-                const votes = await this.prisma.vote.groupBy({
-                    by: ['status'],
+                const votes = await this.prisma.vote.findMany({
                     where: { slotId: slot.id },
-                    _count: true
+                    include: { userSession: { select: { name: true } } },
+                    orderBy: { createdAt: 'asc' }
                 })
 
-                const voteCounts: Record<string, number> = {
-                    yes: 0,
-                    maybe: 0,
-                    no: 0
+                const voters: Record<'yes' | 'maybe' | 'no', string[]> = {
+                    yes: [],
+                    maybe: [],
+                    no: []
+                }
+                for (const v of votes) {
+                    if (v.status === 'yes' || v.status === 'maybe' || v.status === 'no') {
+                        voters[v.status].push(v.userSession.name ?? 'Anonym')
+                    }
                 }
 
-                votes.forEach(v => {
-                    if (v.status in voteCounts) {
-                        voteCounts[v.status] = v._count
-                    }
-                })
-
-                const totalVotes = voteCounts.yes + voteCounts.maybe + voteCounts.no
+                const yesCount = voters.yes.length
+                const maybeCount = voters.maybe.length
+                const noCount = voters.no.length
+                const totalVotes = yesCount + maybeCount + noCount
 
                 return {
                     ...slot,
-                    yesCount: voteCounts.yes,
-                    maybeCount: voteCounts.maybe,
-                    noCount: voteCounts.no,
+                    yesCount,
+                    maybeCount,
+                    noCount,
                     totalVotes,
-                    percentage: totalVotes > 0 ? Math.round((voteCounts.yes / totalVotes) * 100) : 0
+                    percentage: totalVotes > 0 ? Math.round((yesCount / totalVotes) * 100) : 0,
+                    voters
                 }
             })
         )

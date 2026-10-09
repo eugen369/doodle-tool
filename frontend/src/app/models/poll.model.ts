@@ -9,6 +9,7 @@ export interface PollSlot {
     noCount: number
     totalVotes: number
     percentage: number
+    voters: { yes: string[]; maybe: string[]; no: string[] }
 }
 
 export interface Poll {

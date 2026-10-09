@@ -1,0 +1,13 @@
+<span>{{ visibleNames().join(', ') }}</span>
+@if (hiddenCount() > 0) {
+    <div ngbDropdown container="body" class="d-inline-block ms-1">
+        <button type="button" class="btn btn-link btn-sm p-0 align-baseline" ngbDropdownToggle>
+            +{{ hiddenCount() }}
+        </button>
+        <div ngbDropdownMenu>
+            @for (name of hiddenNames(); track $index) {
+                <span class="dropdown-item-text">{{ name }}</span>
+            }
+        </div>
+    </div>
+}

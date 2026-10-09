@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
+import { NameListComponent } from '../../components/name-list/name-list.component'
 import { ActivatedRoute } from '@angular/router'
 import { Poll, PollSlot, VoteStatus } from '../../models/poll.model'
 import { PollService } from '../../services/poll.service'
@@ -13,7 +14,7 @@ interface Participant {
 @Component({
     selector: 'app-view-poll',
     standalone: true,
-    imports: [FormsModule],
+    imports: [FormsModule, NameListComponent],
     templateUrl: './view-poll.component.html'
 })
 export class ViewPollComponent {

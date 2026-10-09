@@ -36,9 +36,9 @@
                 <tr>
                     <th>Termin</th>
                     <th>Deine Wahl</th>
-                    <th class="text-center">Ja</th>
-                    <th class="text-center">Vielleicht</th>
-                    <th class="text-center">Nein</th>
+                    <th>Ja</th>
+                    <th>Vielleicht</th>
+                    <th>Nein</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,9 +63,20 @@
                                 }
                             </div>
                         </td>
-                        <td class="text-center">{{ slot.yesCount }}</td>
-                        <td class="text-center">{{ slot.maybeCount }}</td>
-                        <td class="text-center">{{ slot.noCount }}</td>
+                        <td>
+                            <span class="badge bg-success me-1">{{ slot.yesCount }}</span>
+                            <app-name-list [names]="slot.voters.yes" />
+                        </td>
+                        <td>
+                            <span class="badge bg-warning text-dark me-1">{{
+                                slot.maybeCount
+                            }}</span>
+                            <app-name-list [names]="slot.voters.maybe" />
+                        </td>
+                        <td>
+                            <span class="badge bg-danger me-1">{{ slot.noCount }}</span>
+                            <app-name-list [names]="slot.voters.no" />
+                        </td>
                     </tr>
                 }
             </tbody>
