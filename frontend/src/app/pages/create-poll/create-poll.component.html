@@ -1,28 +1,28 @@
-<h2>Neue Terminumfrage</h2>
+<h2>{{ i18n.t('create.heading') }}</h2>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="mb-3">
-        <label class="form-label">Titel</label>
+        <label class="form-label">{{ i18n.t('create.title') }}</label>
         <input class="form-control" formControlName="title" />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Beschreibung (optional)</label>
+        <label class="form-label">{{ i18n.t('create.description') }}</label>
         <textarea class="form-control" rows="2" formControlName="description"></textarea>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Zeitzone der Termine</label>
+        <label class="form-label">{{ i18n.t('create.timezone') }}</label>
         <select class="form-select" formControlName="timezone">
             @for (tz of timezones; track tz) {
                 <option [value]="tz">{{ tz }}</option>
             }
         </select>
-        <div class="form-text">Die Termine unten werden in dieser Zeitzone eingegeben.</div>
+        <div class="form-text">{{ i18n.t('create.timezoneHint') }}</div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Terminvorschläge</label>
+        <label class="form-label">{{ i18n.t('create.slots') }}</label>
         @for (ctrl of slots.controls; track $index; let i = $index) {
             <div class="input-group mb-2">
                 <input type="datetime-local" class="form-control" [formControl]="ctrl" />
@@ -37,13 +37,15 @@
             </div>
         }
         <button type="button" class="btn btn-outline-secondary btn-sm" (click)="addSlot()">
-            + Termin hinzufügen
+            {{ i18n.t('create.addSlot') }}
         </button>
     </div>
 
-    @if (error()) {
-        <div class="alert alert-danger">{{ error() }}</div>
+    @if (error(); as err) {
+        <div class="alert alert-danger">{{ i18n.t(err) }}</div>
     }
 
-    <button class="btn btn-primary" type="submit" [disabled]="saving()">Umfrage erstellen</button>
+    <button class="btn btn-primary" type="submit" [disabled]="saving()">
+        {{ i18n.t('create.submit') }}
+    </button>
 </form>

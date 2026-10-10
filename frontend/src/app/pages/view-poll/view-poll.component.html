@@ -1,5 +1,5 @@
-@if (error()) {
-    <div class="alert alert-danger">{{ error() }}</div>
+@if (error(); as err) {
+    <div class="alert alert-danger">{{ i18n.t(err) }}</div>
 }
 
 @if (poll(); as p) {
@@ -7,24 +7,28 @@
     @if (p.description) {
         <p class="text-muted">{{ p.description }}</p>
     }
-    <p class="small text-muted">Anzeige in deiner Zeitzone: {{ myTimezone }}</p>
+    <p class="small text-muted">{{ i18n.t('view.displayTz') }}: {{ myTimezone }}</p>
 
     <div class="d-flex gap-2 mb-3">
-        <button class="btn btn-sm btn-outline-secondary" (click)="copyLink()">Link kopieren</button>
-        <a class="btn btn-sm btn-outline-secondary" [href]="pdfUrl" target="_blank">PDF</a>
+        <button class="btn btn-sm btn-outline-secondary" (click)="copyLink()">
+            {{ i18n.t('view.copyLink') }}
+        </button>
+        <a class="btn btn-sm btn-outline-secondary" [href]="pdfUrl" target="_blank">
+            {{ i18n.t('view.pdf') }}
+        </a>
     </div>
 
     @if (participant(); as me) {
         <p>
-            Abstimmen als <strong>{{ me.name }}</strong>
+            {{ i18n.t('view.votingAs') }} <strong>{{ me.name }}</strong>
         </p>
     } @else {
         <div class="card card-body mb-3">
-            <label class="form-label">Dein Name, um abzustimmen</label>
+            <label class="form-label">{{ i18n.t('view.nameLabel') }}</label>
             <div class="input-group">
                 <input class="form-control" [(ngModel)]="name" (keyup.enter)="join()" />
                 <button class="btn btn-primary" (click)="join()" [disabled]="!name.trim()">
-                    Teilnehmen
+                    {{ i18n.t('view.join') }}
                 </button>
             </div>
         </div>
@@ -34,11 +38,11 @@
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th>Termin</th>
-                    <th>Deine Wahl</th>
-                    <th>Ja</th>
-                    <th>Vielleicht</th>
-                    <th>Nein</th>
+                    <th>{{ i18n.t('view.colSlot') }}</th>
+                    <th>{{ i18n.t('view.colChoice') }}</th>
+                    <th>{{ i18n.t('view.yes') }}</th>
+                    <th>{{ i18n.t('view.maybe') }}</th>
+                    <th>{{ i18n.t('view.no') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,7 +62,7 @@
                                         [disabled]="!participant()"
                                         (click)="vote(slot.id, opt.value)"
                                     >
-                                        {{ opt.label }}
+                                        {{ i18n.t(opt.labelKey) }}
                                     </button>
                                 }
                             </div>
@@ -83,5 +87,5 @@
         </table>
     </div>
 } @else {
-    <p>Lade Umfrage …</p>
+    <p>{{ i18n.t('view.loading') }}</p>
 }

@@ -1,15 +1,13 @@
-import { Component } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
+import { Component, inject } from '@angular/core'
+import { RouterLink, RouterOutlet } from '@angular/router'
+import { I18nService } from './i18n/i18n.service'
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet],
-    template: `
-        <main class="container py-4">
-            <router-outlet></router-outlet>
-        </main>
-    `,
-    styles: []
+    imports: [RouterOutlet, RouterLink],
+    templateUrl: './app.component.html'
 })
-export class AppComponent {}
+export class AppComponent {
+    readonly i18n = inject(I18nService)
+}

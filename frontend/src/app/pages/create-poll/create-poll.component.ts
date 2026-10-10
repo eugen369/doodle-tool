@@ -7,6 +7,8 @@ import {
     Validators
 } from '@angular/forms'
 import { Router } from '@angular/router'
+import { I18nService } from '../../i18n/i18n.service'
+import { TranslationKey } from '../../i18n/translations'
 import { PollService } from '../../services/poll.service'
 import { browserTimezone, COMMON_TIMEZONES, zonedLocalToIso } from '../../utils/time'
 
@@ -20,10 +22,11 @@ export class CreatePollComponent {
     private fb = inject(FormBuilder)
     private api = inject(PollService)
     private router = inject(Router)
+    readonly i18n = inject(I18nService)
 
     readonly timezones = COMMON_TIMEZONES
     readonly saving = signal(false)
-    readonly error = signal<string | null>(null)
+    readonly error = signal<TranslationKey | null>(null)
 
     readonly form = this.fb.nonNullable.group({
         title: ['', [Validators.required, Validators.minLength(3)]],
@@ -56,7 +59,7 @@ export class CreatePollComponent {
         // Leere Felder ignorieren, doppelte Zeiten entfernen (Backend ist unique pro Poll)
         const locals = [...new Set(this.slots.controls.map(c => c.value).filter(v => v))]
         if (locals.length === 0) {
-            this.error.set('Bitte mindestens einen Termin angeben.')
+            this.error.set('err.noSlots')
             return
         }
 
@@ -74,7 +77,7 @@ export class CreatePollComponent {
                 next: poll => this.router.navigate(['/poll', poll.id]),
                 error: () => {
                     this.saving.set(false)
-                    this.error.set('Umfrage konnte nicht erstellt werden.')
+                    this.error.set('err.createFailed')
                 }
             })
     }

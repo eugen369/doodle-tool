@@ -1,7 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
-import { NameListComponent } from '../../components/name-list/name-list.component'
 import { ActivatedRoute } from '@angular/router'
+import { NameListComponent } from '../../components/name-list/name-list.component'
+import { I18nService } from '../../i18n/i18n.service'
+import { TranslationKey } from '../../i18n/translations'
 import { Poll, PollSlot, VoteStatus } from '../../models/poll.model'
 import { PollService } from '../../services/poll.service'
 import { browserTimezone, formatInTz } from '../../utils/time'
@@ -20,19 +22,20 @@ interface Participant {
 export class ViewPollComponent {
     private route = inject(ActivatedRoute)
     private api = inject(PollService)
+    readonly i18n = inject(I18nService)
 
     readonly pollId = this.route.snapshot.paramMap.get('id') ?? ''
     readonly myTimezone = browserTimezone()
-    readonly options: { value: VoteStatus; label: string }[] = [
-        { value: 'yes', label: 'Ja' },
-        { value: 'maybe', label: 'Vielleicht' },
-        { value: 'no', label: 'Nein' }
+    readonly options: { value: VoteStatus; labelKey: TranslationKey }[] = [
+        { value: 'yes', labelKey: 'view.yes' },
+        { value: 'maybe', labelKey: 'view.maybe' },
+        { value: 'no', labelKey: 'view.no' }
     ]
 
     readonly poll = signal<Poll | null>(null)
     readonly userVotes = signal<Record<string, VoteStatus>>({})
     readonly participant = signal<Participant | null>(this.loadParticipant())
-    readonly error = signal<string | null>(null)
+    readonly error = signal<TranslationKey | null>(null)
     name = ''
 
     /** Slots chronologisch sortieren, damit die Reihenfolge beim Abstimmen stabil bleibt */
@@ -58,7 +61,7 @@ export class ViewPollComponent {
     }
 
     formatSlot(iso: string): string {
-        return formatInTz(iso, this.myTimezone)
+        return formatInTz(iso, this.myTimezone, this.i18n.locale())
     }
 
     copyLink(): void {
@@ -76,7 +79,7 @@ export class ViewPollComponent {
                 this.participant.set(me)
                 this.load()
             },
-            error: () => this.error.set('Teilnahme fehlgeschlagen.')
+            error: () => this.error.set('err.joinFailed')
         })
     }
 
@@ -86,7 +89,7 @@ export class ViewPollComponent {
 
         this.api.vote(this.pollId, me.id, slotId, status).subscribe({
             next: () => this.load(),
-            error: () => this.error.set('Abstimmung fehlgeschlagen.')
+            error: () => this.error.set('err.voteFailed')
         })
     }
 
@@ -96,7 +99,7 @@ export class ViewPollComponent {
                 this.poll.set(poll)
                 this.error.set(null)
             },
-            error: () => this.error.set('Umfrage nicht gefunden.')
+            error: () => this.error.set('err.notFound')
         })
 
         const me = this.participant()

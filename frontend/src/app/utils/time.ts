@@ -16,8 +16,8 @@ export function browserTimezone(): string {
 }
 
 /** Zeigt einen UTC-Zeitpunkt in der gewünschten Zeitzone an */
-export function formatInTz(iso: string, tz: string): string {
-    return new Intl.DateTimeFormat('de-DE', {
+export function formatInTz(iso: string, tz: string, locale = 'de-DE'): string {
+    return new Intl.DateTimeFormat(locale, {
         timeZone: tz,
         weekday: 'short',
         day: '2-digit',

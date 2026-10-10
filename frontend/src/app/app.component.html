@@ -1,0 +1,11 @@
+<nav class="navbar border-bottom mb-4">
+    <div class="container d-flex justify-content-between">
+        <a class="navbar-brand" routerLink="/">📅 Doodle Tool</a>
+        <button class="btn btn-sm btn-outline-secondary" (click)="i18n.toggle()">
+            {{ i18n.t('app.switch') }}
+        </button>
+    </div>
+</nav>
+<main class="container pb-4">
+    <router-outlet></router-outlet>
+</main>
