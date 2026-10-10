@@ -53,7 +53,7 @@ export class ViewPollComponent {
     })
 
     get pdfUrl(): string {
-        return this.api.pdfUrl(this.pollId)
+        return this.api.pdfUrl(this.pollId, this.i18n.lang())
     }
 
     constructor() {

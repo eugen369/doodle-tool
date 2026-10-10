@@ -1,4 +1,5 @@
 import {
+    Query,
     Controller,
     Post,
     Get,
@@ -35,9 +36,9 @@ export class PollsController {
     }
 
     @Get(':id/export/pdf')
-    async exportPDF(@Param('id') id: string, @Res() res: Response) {
+    async exportPDF(@Param('id') id: string, @Query('lang') lang: string, @Res() res: Response) {
         try {
-            const pdfBuffer = await this.pollsService.exportPDF(id)
+            const pdfBuffer = await this.pollsService.exportPDF(id, lang === 'en' ? 'en' : 'de')
             res.setHeader('Content-Type', 'application/pdf')
             res.setHeader('Content-Disposition', `attachment; filename="poll-${id}.pdf"`)
             res.send(pdfBuffer)

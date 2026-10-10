@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { v4 as uuidv4 } from 'uuid'
 import { PrismaService } from './prisma.service'
 import { CreatePollDto, CreateUserSessionDto } from './dtos/create-poll.dto'
-import { generatePollPDF } from '../common/pdf.generator'
+import { generatePollPDF, PdfLang } from '../common/pdf.generator'
 
 @Injectable()
 export class PollsService {
@@ -141,7 +141,7 @@ export class PollsService {
         }
     }
 
-    async exportPDF(id: string): Promise<Buffer> {
+    async exportPDF(id: string, lang: PdfLang = 'de'): Promise<Buffer> {
         const poll = await this.getPollWithVotes(id)
 
         const pdfData = {
@@ -151,15 +151,15 @@ export class PollsService {
             timezone: poll.timezone,
             slots: poll.slots.map(slot => ({
                 startsAt: slot.startsAt,
-                endsAt: slot.endsAt,
+                totalVotes: slot.totalVotes,
                 yesCount: slot.yesCount,
                 maybeCount: slot.maybeCount,
                 noCount: slot.noCount,
-                totalVotes: slot.totalVotes
+                voters: slot.voters
             })),
             createdAt: poll.createdAt
         }
 
-        return generatePollPDF(pdfData)
+        return generatePollPDF(pdfData, lang)
     }
 }

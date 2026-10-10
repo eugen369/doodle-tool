@@ -42,7 +42,7 @@ export class PollService {
         return this.http.get<Record<string, VoteStatus>>(`${this.base}/votes/user/${sessionId}`)
     }
 
-    pdfUrl(pollId: string): string {
-        return `${this.base}/polls/${pollId}/export/pdf`
+    pdfUrl(pollId: string, lang: string): string {
+        return `${this.base}/polls/${pollId}/export/pdf?lang=${lang}`
     }
 }

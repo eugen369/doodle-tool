@@ -25,7 +25,9 @@
         <label class="form-label">{{ i18n.t('create.slots') }}</label>
         @for (ctrl of slots.controls; track $index; let i = $index) {
             <div class="input-group mb-2">
-                <input type="datetime-local" class="form-control" [formControl]="ctrl" />
+                <div class="flex-grow-1">
+                    <app-slot-picker [formControl]="ctrl" />
+                </div>
                 <button
                     type="button"
                     class="btn btn-outline-danger"

@@ -14,6 +14,8 @@ export const de = {
     'create.slots': 'Terminvorschläge',
     'create.addSlot': '+ Termin hinzufügen',
     'create.submit': 'Umfrage erstellen',
+    'picker.placeholder': 'Datum und Uhrzeit wählen',
+    'picker.time': 'Uhrzeit',
 
     'view.displayTz': 'Anzeige in deiner Zeitzone',
     'view.copyLink': 'Link kopieren',
@@ -51,6 +53,8 @@ export const en: Record<TranslationKey, string> = {
     'create.slots': 'Time slots',
     'create.addSlot': '+ Add slot',
     'create.submit': 'Create poll',
+    'picker.placeholder': 'Pick date and time',
+    'picker.time': 'Time',
 
     'view.displayTz': 'Shown in your time zone',
     'view.copyLink': 'Copy link',

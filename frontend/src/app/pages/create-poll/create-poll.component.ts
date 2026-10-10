@@ -7,6 +7,7 @@ import {
     Validators
 } from '@angular/forms'
 import { Router } from '@angular/router'
+import { SlotPickerComponent } from '../../components/slot-picker/slot-picker.component'
 import { I18nService } from '../../i18n/i18n.service'
 import { TranslationKey } from '../../i18n/translations'
 import { PollService } from '../../services/poll.service'
@@ -15,7 +16,7 @@ import { browserTimezone, COMMON_TIMEZONES, zonedLocalToIso } from '../../utils/
 @Component({
     selector: 'app-create-poll',
     standalone: true,
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, SlotPickerComponent],
     templateUrl: './create-poll.component.html'
 })
 export class CreatePollComponent {
