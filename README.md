@@ -101,6 +101,12 @@ npx prisma migrate dev --name "your_change_name"
 | Timezone | date-fns-tz |
 | PDF | pdfkit |
 
+## Hintergrund
+
+Dieses Projekt entstand als Lernprojekt, um Node.js und das NestJS-Framework zu erkunden.
+
+Entwickelt mit Unterstützung von [pi](https://github.com/earendil-works/pi) (AI Coding Agent) und Claude Haiku 4.5 als Modell. Der Einsatz von AI-Tools war dabei selbst Teil des Lernziels: wie integriert man Coding Agents sinnvoll und sicher in den Entwickleralltag (Docker-Isolation, konfigurierbare Extensions)?
+
 ## License
 
 MIT

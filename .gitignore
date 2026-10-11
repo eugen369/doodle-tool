@@ -42,3 +42,4 @@ NEXT_STEPS.md
 tmp/
 temp/
 .prettierrc
+/deploy
